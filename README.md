@@ -1,1 +1,1 @@
-a pool for rabbitmq
+a pool for rabbitmq caches connections and channels.
