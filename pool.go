@@ -38,6 +38,7 @@ type Stats struct {
 	Stales uint32 // number of stale connections removed from the pool
 }
 
+// Pool is the interface that must be implemented by a connection pool.
 type Pool interface {
 	Get(context.Context) (*Connection, error)
 	Put(context.Context, *Connection)

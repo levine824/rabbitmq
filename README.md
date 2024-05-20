@@ -1,1 +1,1 @@
-# rabbitmq
+a pool for rabbitmq

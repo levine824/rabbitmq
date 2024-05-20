@@ -6,7 +6,7 @@ import (
 
 // Channel wraps an AMQP channel with listeners.
 type Channel struct {
-	amqChannel *amqp.Channel
+	*amqp.Channel
 
 	connection *Connection
 
@@ -34,7 +34,7 @@ func (ch *Channel) open() error {
 		return err
 	}
 
-	ch.amqChannel = c
+	ch.Channel = c
 
 	return nil
 }
@@ -45,12 +45,12 @@ func (ch *Channel) Close() {
 }
 
 func (ch *Channel) close() error {
-	err := ch.amqChannel.Close()
+	err := ch.Channel.Close()
 	if err != nil {
 		return err
 	}
 
-	ch.amqChannel = nil
+	ch.Channel = nil
 	ch.closes = nil
 	ch.returns = nil
 	ch.confirms = nil
@@ -60,7 +60,7 @@ func (ch *Channel) close() error {
 
 func (ch *Channel) NotifyClose() chan *amqp.Error {
 	if ch.closes == nil {
-		ch.closes = ch.amqChannel.NotifyClose(make(chan *amqp.Error, 1))
+		ch.closes = ch.Channel.NotifyClose(make(chan *amqp.Error, 1))
 	}
 
 	return ch.closes
@@ -68,7 +68,7 @@ func (ch *Channel) NotifyClose() chan *amqp.Error {
 
 func (ch *Channel) NotifyReturn() chan amqp.Return {
 	if ch.returns == nil {
-		ch.returns = ch.amqChannel.NotifyReturn(make(chan amqp.Return, 1))
+		ch.returns = ch.Channel.NotifyReturn(make(chan amqp.Return, 1))
 	}
 
 	return ch.returns
@@ -76,10 +76,10 @@ func (ch *Channel) NotifyReturn() chan amqp.Return {
 
 func (ch *Channel) NotifyPublish() (chan amqp.Confirmation, error) {
 	if ch.confirms == nil {
-		if err := ch.amqChannel.Confirm(false); err != nil {
+		if err := ch.Channel.Confirm(false); err != nil {
 			return nil, err
 		}
-		ch.confirms = ch.amqChannel.NotifyPublish(make(chan amqp.Confirmation, 1))
+		ch.confirms = ch.Channel.NotifyPublish(make(chan amqp.Confirmation, 1))
 	}
 
 	return ch.confirms, nil
