@@ -59,6 +59,7 @@ type ConnectionPoolConfig struct {
 	PoolTimeout time.Duration
 }
 
+// ConnectionPool is a Pool that caches connections.
 type ConnectionPool struct {
 	cfg *ConnectionPoolConfig
 
